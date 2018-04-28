@@ -25,8 +25,8 @@ import java.io.IOException;
 @RequestMapping("/spitter")
 public class SpitterController {
     /*Relative path to uploaded files*/
-    private final static String FOLDER_FOR_DOWNLOADS       = "uploads/";
-    private final static String FOLDER_FOR_DOWNLOADS_MULTI = "uploads/multiple/";
+    private static final String FOLDER_FOR_DOWNLOADS       = "uploads/";
+    private static final String FOLDER_FOR_DOWNLOADS_MULTI = "uploads/multiple/";
     
     private final Logger logger = LoggerFactory.getLogger(SpitterController.class);
     
