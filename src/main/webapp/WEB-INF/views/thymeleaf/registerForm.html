@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Spitter</title>
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/resources/style.css}"/>
+  </head>
+  <body>
+    <!--<div id="header" th:include="page :: header"></div>-->
+
+    <div id="content">
+      <h1>Register (Thymeleaf demonstration)</h1>
+
+      <form method="POST" th:object="${spitter}" enctype="multipart/form-data">
+        <!--But also notice that Thymeleaf is used near the top of the form to render all errors.
+        The <div> element has a th:if attribute that checks to see if there are any errors.
+        If there are, the <div> will be rendered. Otherwise, it won’t be rendered.-->
+        <div class="errors" th:if="${#fields.hasErrors('*')}">
+          <ul>
+            <!--In the <div> is an unordered list to display each of the errors.
+            The th:each attribute on the <li> tag instructs Thymeleaf to render the <li> one time for each error,
+            assigning the current error in each iteration to a variable named err.-->
+            <!--The <li> tag also has a th:text attribute. This attribute instructs Thymeleaf to evaluate an expression
+            (in this case, the value of the err variable) and render its value as the body of the <li> tag.
+            In effect, there will be one <li> for each error, displaying the text of that error.-->
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">
+              Input is incorrect
+            </li>
+          </ul>
+        </div>
+
+        <!--Instead of using the cssClassName attribute as you did with Spring’s JSP tags,
+        here you use Thymeleaf’s th:class attribute on standard HTML tags.
+        The th:class attribute renders a class attribute with a value calculated from the given expression.
+        In both uses of th:class, it directly checks to see if there are any field errors for the first- Name field.
+        If so, the class attribute is rendered with a value of error.
+        If there are no field errors, the class attribute isn’t rendered at all.-->
+        <label th:class="${#fields.hasErrors('firstName')}? 'error'">First Name</label>:
+        <!--The <input> tag uses the th:field attribute to reference the firstName field from the backing object.
+        This may be slightly different than you expected. Many times in a Thymeleaf template, you’ll use a Thymeleaf attribute
+        that mirrors a standard HTML attribute,  so  it  might  seem  appropriate  to  use  the  th:value attribute
+        to  set  the <input> tag’s value attribute.
+        Instead, because you’re binding the field to the backing object’s firstName property, you use the th:field attribute,
+        referring to the firstName field. By using th:field, you get both a value attribute set to the value of firstName
+        and also a name attribute set to firstName.-->
+        <input type="text" th:field="*{firstName}"
+               th:class="${#fields.hasErrors('firstName')}? 'error'"/><br/>
+
+        <label th:class="${#fields.hasErrors('lastName')}? 'error'">Last Name</label>:
+        <input type="text" th:field="*{lastName}"
+               th:class="${#fields.hasErrors('lastName')}? 'error'"/><br/>
+
+        <label th:class="${#fields.hasErrors('email')}? 'error'">Email</label>:
+        <input type="text" th:field="*{email}"
+               th:class="${#fields.hasErrors('email')}? 'error'"/><br/>
+
+        <label th:class="${#fields.hasErrors('username')}? 'error'">Username</label>:
+        <input type="text" th:field="*{username}"
+               th:class="${#fields.hasErrors('username')}? 'error'"/><br/>
+
+        <label th:class="${#fields.hasErrors('password')}? 'error'">Password</label>:
+        <input type="password" th:field="*{password}"
+               th:class="${#fields.hasErrors('password')}? 'error'"/><br/>
+
+        <label>Profile Picture</label>:
+        <input type="file" name="profilePicture" accept="image/jpeg,image/png,image/gif"/><br/>
+
+        <input type="submit" value="Register"/>
+      </form>
+    </div>
+    <!--<div id="footer" th:include="page :: copy"></div>-->
+  </body>
+</html>

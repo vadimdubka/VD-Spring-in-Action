@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--Commented because we configured everything with annotations-->
+
+
+    <!-- <annotation-driven/>-->
+
+    <!-- Scan the JavaConfig -->
+    <!--<context:component-scan base-package="com.vadimdubka.config" />-->
+
+    <!--<beans:bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <beans:property name="prefix" value="/WEB-INF/views/"/>
+        <beans:property name="suffix" value=".jsp"/>
+    </beans:bean>-->
+
+    <!--<resources mapping="/resources/**" location="/resources/"/>-->
+
+    <!--
+    <view-controller path="/" view-name="home" />
+    -->
+
+</beans:beans>

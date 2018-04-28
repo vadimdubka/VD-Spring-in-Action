@@ -1,0 +1,89 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>Spring4 MVC Application</display-name>
+
+    <!--********************************************************************************************-->
+    <!--
+
+        &lt;!&ndash; In a typical Spring MVC application, you need
+        - DispatcherServlet and
+        - ContextLoaderListener.
+        AbstractAnnotationConfigDispatcherServletInitializer will register these automatically for you, but if you’re registering them in web.xml, you’ll need to do all the work. &ndash;&gt;
+
+        &lt;!&ndash;Traditionally DispatcherServlet and ContextLoaderListener load their respective application contexts from XML. But we’ll favor Java configuration over XML configuration. Therefore you’ll want to set up Spring MVC to load the configuration from @Configuration-annotated classes.&ndash;&gt;
+        &lt;!&ndash;If you want use Java configuration&ndash;&gt;
+        &lt;!&ndash;<context-param>
+            <param-name>contextClass</param-name>
+            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            </param-value>
+        </context-param>&ndash;&gt;
+
+        &lt;!&ndash;Set location of root APP CONTEXT with beans definitions loaded by ContextLoaderListener. &ndash;&gt;
+        <context-param>
+            <param-name>contextConfigLocation</param-name>
+            &lt;!&ndash;If you want use XML configuration&ndash;&gt;
+            <param-value>/WEB-INF/spring/root-context.xml</param-value>
+            &lt;!&ndash;If you want use Java configuration&ndash;&gt;
+            &lt;!&ndash;<param-value>com.vadimdubka.config.RootConfig</param-value>&ndash;&gt;
+        </context-param>
+
+        &lt;!&ndash; Register ContextLoaderListener&ndash;&gt;
+        <listener>
+            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        </listener>
+
+        &lt;!&ndash;Register DispatcherServlet&ndash;&gt;
+        &lt;!&ndash;DispatcherServlet loads its application context with beans defined in a file whose name is based on the servlet name. In listing 7.3, the servlet is named appServlet. Therefore, DispatcherServlet loads its application context from an XML file at / WEB-INF/appServlet-context.xml.&ndash;&gt;
+        <servlet>
+            <servlet-name>appServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            &lt;!&ndash;If you want use Java configuration&ndash;&gt;
+            &lt;!&ndash;<init-param>
+                <param-name>contextClass</param-name>
+                <param-value>
+                    org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+                </param-value>
+            </init-param>&ndash;&gt;
+            &lt;!&ndash;If you’d rather specify the location of the DispatcherServlet configuration file, you can set a contextConfigLocation initialization parameter on the servlet. For example, the following DispatcherServlet configuration has DispatcherServlet loading  its  beans  from  /WEB-INF/spring/servlet-context.xml:&ndash;&gt;
+            &lt;!&ndash;Specify DispatcherServlet configuration class&ndash;&gt;
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                &lt;!&ndash;If you want use XML configuration&ndash;&gt;
+                <param-value>/WEB-INF/spring/servlet-context.xml</param-value>
+                &lt;!&ndash;If you want use Java configuration&ndash;&gt;
+                &lt;!&ndash;<param-value>com.vadimdubka.config.WebConfigConfig</param-value>&ndash;&gt;
+            </init-param>
+            &lt;!&ndash;Specify multipart configuration &ndash;&gt;
+            <multipart-config>
+                <location>/tmp/spittr/uploads</location>
+                <max-file-size>2097152</max-file-size>
+                <max-request-size>4194304</max-request-size>
+            </multipart-config>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+
+        &lt;!&ndash;Map DispatcherServlet to /&ndash;&gt;
+        <servlet-mapping>
+            <servlet-name>appServlet</servlet-name>
+            <url-pattern>/</url-pattern>
+        </servlet-mapping>
+    -->
+
+    <!--********************************************************************************************-->
+
+    <!--<error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error.jsp</location>
+    </error-page>
+    <error-page>
+        <location>/WEB-INF/views/error.jsp</location>
+    </error-page>-->
+</web-app>
