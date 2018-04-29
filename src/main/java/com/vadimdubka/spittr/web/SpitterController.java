@@ -18,15 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Controller
 @RequestMapping("/spitter")
 public class SpitterController {
-    /*Relative path to uploaded files*/
+    /*Relative path to folders with downloaded files*/
     private static final String FOLDER_FOR_DOWNLOADS       = "uploads/";
-    private static final String FOLDER_FOR_DOWNLOADS_MULTI = "uploads/multiple/";
+    private static final String FOLDER_FOR_MULTI_DOWNLOADS = "uploads/multiple/";
     
     private final Logger logger = LoggerFactory.getLogger(SpitterController.class);
     
@@ -65,16 +66,23 @@ public class SpitterController {
     /*5.4.2	Validating forms*/
     /*7.2.2	Handling multipart requests*/
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String processRegistration(@RequestParam("profilePicture") MultipartFile file, @Valid Spitter spitter, Errors errors)
-        throws IOException {
+    public String processRegistration(@RequestParam("profilePicture") MultipartFile file, @Valid Spitter spitter, Errors errors) {
         logger.debug("processRegistration()");
         if (errors.hasErrors()) {
             logger.error(errors.getAllErrors().toString());
             return "spittles/registerForm"; // Return to form on validation errors
         }
         
-        spitterRepository.save(spitter); // Save a Spitter
-        downloadFile(file, FOLDER_FOR_DOWNLOADS); // Save file
+        // Save a Spitter
+        spitterRepository.save(spitter);
+        // Save file
+        logger.debug("file name and size: " + file.getOriginalFilename() + "  ::  " + file.getSize());
+        if (file.getOriginalFilename().isEmpty()) {
+            logger.debug("Please select a valid file..");
+        } else {
+            writeFile(file, FOLDER_FOR_DOWNLOADS);
+            logger.debug("File uploaded successfully");
+        }
         return "redirect:/spitter/" + spitter.getUsername(); // Redirect to profile page . Also recognizes the forward: prefix
     }
     
@@ -88,37 +96,30 @@ public class SpitterController {
     
     // Handling multiple files upload requesta
     @RequestMapping(value = "/multipleFileUpload", method = RequestMethod.POST)
-    public String multipleFileUpload(@RequestParam("file") MultipartFile[] files, Model model) throws IOException {
+    public String multipleFileUpload(@RequestParam("file") MultipartFile[] files, Model model) {
         logger.debug("multipleFileUpload()");
         for (MultipartFile file : files) {
-            if (!file.getOriginalFilename().isEmpty()) {
-                File                 downloadedFile = new File(FOLDER_FOR_DOWNLOADS_MULTI, file.getOriginalFilename());
-                BufferedOutputStream outputStream   = new BufferedOutputStream(new FileOutputStream(downloadedFile));
-                outputStream.write(file.getBytes());
-                outputStream.flush();
-                outputStream.close();
-            } else {
+            if (file.getOriginalFilename().isEmpty()) {
                 model.addAttribute("msg", "Please select at least one file..");
                 return "home";
+            } else {
+                writeFile(file, FOLDER_FOR_MULTI_DOWNLOADS);
             }
         }
         model.addAttribute("msg", "Multiple files uploaded successfully.");
         return "home";
     }
     
-    /** Save file on system. */
-    private void downloadFile(@RequestPart("file") MultipartFile file, String folderForDownloads) throws IOException {
-        logger.debug("file name and size: " + file.getOriginalFilename() + "  ::  " + file.getSize());
-        if (!file.getOriginalFilename().isEmpty()) {
-            /*File downloadedFile = new File(folderForDownloads + file.getOriginalFilename());*/
-            File                 downloadedFile = new File(folderForDownloads, file.getOriginalFilename());
-            BufferedOutputStream outputStream   = new BufferedOutputStream(new FileOutputStream(downloadedFile));
+    private void writeFile(@RequestPart("file") MultipartFile file, String folderForDownloads) {
+        /*File downloadedFile = new File(folderForDownloads + file.getOriginalFilename());*/
+        File downloadedFile = new File(folderForDownloads, file.getOriginalFilename());
+        try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadedFile))) {
             outputStream.write(file.getBytes());
             outputStream.flush();
-            outputStream.close();
-            logger.debug("File uploaded successfully");
-        } else {
-            logger.debug("Please select a valid file..");
+        } catch (FileNotFoundException e) {
+            logger.error(e.getMessage());
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
     }
 }
