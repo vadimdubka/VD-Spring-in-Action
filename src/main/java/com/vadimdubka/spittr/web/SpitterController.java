@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -81,7 +80,6 @@ public class SpitterController {
             logger.debug("Please select a valid file..");
         } else {
             writeFile(file, FOLDER_FOR_DOWNLOADS);
-            logger.debug("File uploaded successfully");
         }
         return "redirect:/spitter/" + spitter.getUsername(); // Redirect to profile page . Also recognizes the forward: prefix
     }
@@ -116,8 +114,7 @@ public class SpitterController {
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadedFile))) {
             outputStream.write(file.getBytes());
             outputStream.flush();
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.debug("File uploaded successfully");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
