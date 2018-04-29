@@ -1,18 +1,26 @@
 package com.vadimdubka.spittr.web;
 
 import com.vadimdubka.spittr.dao.SpittleRepository;
+import com.vadimdubka.spittr.model.Spittle;
+import com.vadimdubka.spittr.model.SpittleForm;
+import com.vadimdubka.spittr.web.exeption.DuplicateSpittleException;
+import com.vadimdubka.spittr.web.exeption.SpittleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
+
 @Controller
-/*Any time there’s a class-level @RequestMapping on a controller class, it applies to all handler methods in the controller. Then any @RequestMapping annotations on handler methods will complement the class-level @RequestMapping.*/
+/*Any time there’s a class-level @RequestMapping on a controller class, it applies to all handler methods in the controller.
+Then any @RequestMapping annotations on handler methods will complement the class-level @RequestMapping.*/
 @RequestMapping("/spittles")
 public class SpittleController {
     private final Logger logger = LoggerFactory.getLogger(SpittleController.class);
@@ -57,17 +65,50 @@ public class SpittleController {
         return "spittles/spittles";
     }
     
-    /*good approach to get path as resource*/
+    /*Good approach to get path as resource*/
     /*Notice that the phrase spittleId is repeated a few times in the example: in the
-@RequestMapping path, as the value attribute of @PathVariable, and again as a method parameter name. Because the method parameter  name  happens  to  be  the same  as  the  placeholder  name,  you  can  optionally  omit  the  value parameter  on
-@PathVariable:
-*/
+@RequestMapping path, as the value attribute of @PathVariable, and again as a method parameter name.
+Because the method parameter  name  happens  to  be  the same  as  the  placeholder  name,
+you  can  optionally  omit  the  value parameter  on @PathVariable: */
     @RequestMapping(value = "/{spittleId}", method = RequestMethod.GET)
     /*public String spittle(@PathVariable("spittleId") long spittleId, Model model) {*/
     public String spittle(@PathVariable long spittleId, Model model) {
-        model.addAttribute(spittleRepository.findOne(spittleId));
+        logger.debug("spittle()");
+        Spittle spittle = spittleRepository.findOne(spittleId);
+        if (spittle == null) {
+            throw new SpittleNotFoundException();
+        }
+        model.addAttribute(spittle);
         return "spittles/spittles";
     }
     
+    /**
+     * 7.3	Handling exceptions
+     * Suppose that SpittleRepository’s save() method throws a DuplicateSpittleException
+     * if a user attempts to create a Spittle with text identical to one they’ve already created.
+     * {@link DuplicateSpittleException}, {@link #handleNotFound()}
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    public String saveSpittle(SpittleForm form, Model model) {
+        /** Thanks to {@link #handleNotFound()} we can shorten exception handling.*/
+        /*try {
+            spittleRepository.save(new Spittle(null, form.getMessage(), new Date(),
+                                               form.getLongitude(), form.getLatitude()));
+            return "redirect:/spittles";
+        } catch (DuplicateSpittleException e) {
+            return "error/duplicate";
+        }*/
+        spittleRepository.save(new Spittle(null, form.getMessage(), new Date(),
+                                           form.getLongitude(), form.getLatitude()));
+        return "redirect:/spittles";
+    }
     
+    /*The @ExceptionHandler annotation has been applied to the handleDuplicate- Spittle() method, designating it as the go-to method when a DuplicateSpittle- Exception is thrown. It returns a String, which, just as with the request-handling method, specifies the logical name of the view to render, telling the user that they attempted to create a duplicate entry.
+     * What’s especially interesting about @ExceptionHandler methods is that they han- dle their exceptions from any handler method in the same controller. So although you created the handleDuplicateSpittle() method from the code extracted from saveSpittle(), it will handle a DuplicateSpittleException thrown from any method in SpittleController.
+     * If @ExceptionHandler methods can handle exceptions thrown from any handler method in the same controller class, you might be wondering if there’s a way they can handle exceptions thrown from handler methods in any controller. As of Spring 3.2 they certainly can, but only if they’re defined in a controller advice class.
+     * */
+    @ExceptionHandler(DuplicateSpittleException.class)
+    public String handleNotFound() {
+        return "error/duplicate";
+    }
 }

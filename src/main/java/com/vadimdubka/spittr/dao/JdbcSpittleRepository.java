@@ -47,11 +47,12 @@ public class JdbcSpittleRepository implements SpittleRepository {
     }
     
     public Spittle findOne(long id) {
-        /*return jdbc.queryForObject(
+        /*List<Spittle> spittles = jdbc.query(
             "select id, message, created_at, latitude, longitude" +
                 " from Spittle" +
                 " where id = ?",
-            new SpittleRowMapper(), id);*/
+            new SpittleRowMapper(), id);
+        return spittles.size() > 0 ? spittles.get(0) : null;*/
         return new Spittle("Spittle " + id, new Date());
     }
     

@@ -65,7 +65,8 @@ public class SpitterController {
     /*5.4.2	Validating forms*/
     /*7.2.2	Handling multipart requests*/
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String processRegistration(@RequestParam("profilePicture") MultipartFile file, @Valid Spitter spitter, Errors errors) {
+    public String processRegistration(@RequestParam("profilePicture") MultipartFile file,
+                                      @Valid Spitter spitter, Errors errors) {
         logger.debug("processRegistration()");
         if (errors.hasErrors()) {
             logger.error(errors.getAllErrors().toString());
