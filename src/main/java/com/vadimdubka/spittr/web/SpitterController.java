@@ -66,7 +66,7 @@ public class SpitterController {
     /*7.2.2	Handling multipart requests*/
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String processRegistration(@RequestParam("profilePicture") MultipartFile file,
-                                      @Valid Spitter spitter, Errors errors) {
+                                      @Valid Spitter spitter, Errors errors, Model model) {
         logger.debug("processRegistration()");
         if (errors.hasErrors()) {
             logger.error(errors.getAllErrors().toString());
@@ -76,13 +76,34 @@ public class SpitterController {
         // Save a Spitter
         spitterRepository.save(spitter);
         // Save file
-        logger.debug("file name and size: " + file.getOriginalFilename() + "  ::  " + file.getSize());
         if (file.getOriginalFilename().isEmpty()) {
             logger.debug("Please select a valid file..");
         } else {
+            logger.debug("file name and size: " + file.getOriginalFilename() + "  ::  " + file.getSize());
             writeFile(file, FOLDER_FOR_DOWNLOADS);
         }
-        return "redirect:/spitter/" + spitter.getUsername(); // Redirect to profile page . Also recognizes the forward: prefix
+        
+        /*Redirect to profile page . Also recognizes prefix "forward*/
+        /*First variant of redirect.
+         * String concatenation is dangerous business when constructing things like URLs and SQL queries.*/
+        // return "redirect:/spitter/" + spitter.getUsername();
+        
+        /*Second variant of redirect - using URL templates
+        7.5.1	Redirecting with URL templates.
+        All you need to do is set the value in the model.
+        To do that, the processRegistration() needs to be written to accept a Model as a parameter
+        and populate it with the username.
+        Because it’s filled into the placeholder in the URL template instead of concatenated into the redirect String,
+        any unsafe characters in the username property are escaped. This is safer than allowing the user to type in whatever they want
+        for the username and then appending it to the path.
+        URL templates only good for sending simple values, such as String and numeric values.
+        There’s no good way to send anything more complex in a URL. But that’s where flash attributes come in to help*/
+        model.addAttribute("username", spitter.getUsername());
+        /*because the spitterId attribute from the model doesn’t map to any URL placeholders in the redirect,
+        it’s tacked on to the redirect automatically as a query parameter.*/
+        model.addAttribute("id", spitter.getId()); /*If the username attribute is habuma and the spitterId attribute is 42,
+        then the resulting redirect path will be /spitter/habuma?spitterId=42.*/
+        return "redirect:/spitter/{username}";
     }
     
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)

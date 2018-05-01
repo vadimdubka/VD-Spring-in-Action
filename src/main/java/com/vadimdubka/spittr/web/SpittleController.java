@@ -36,11 +36,15 @@ public class SpittleController {
     /** Taking request without parameters */
     @RequestMapping(method = RequestMethod.GET)
     public String spittles(Model model) {
-        // Add spittles to model
-        /*spittles() method is given a Model as a parameter. This is so that spittles() can populate the model with the Spittle list it retrieves from the reposi- tory. The Model is essentially a map (that is, a collection of key-value pairs) that will be handed off to the view so that the data can be rendered to the client. When add- Attribute() is called without specifying a key, the key is inferred from the type of object being set as the value. In this case, because it’s a List<Spittle>, the key will be inferred as spittleList.*/
+        /* Add spittles to model.
+        Spittles() method is given a Model as a parameter. This is so that spittles() can populate the model with the Spittle list
+         it retrieves from the repository. The Model is essentially a map (that is, a collection of key-value pairs)
+         that will be handed off to the view so that the data can be rendered to the client.
+         When add- Attribute() is called without specifying a key, the key is inferred from the type of object being set as the value.
+         In this case, because it’s a List<Spittle>, the key will be inferred as spittleList.
+         The equivalent:
+         model.addAttribute("spittleList", spittleRepository.findSpittles(Long.MAX_VALUE, 20));*/
         model.addAttribute(spittleRepository.findSpittles(Long.MAX_VALUE, 20));
-        /*The equivalent*/
-        /*model.addAttribute("spittleList", spittleRepository.findSpittles(Long.MAX_VALUE, 20));*/
         return "spittles/spittles";  // Return view name
     }
     
