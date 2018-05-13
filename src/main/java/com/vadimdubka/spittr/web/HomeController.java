@@ -21,8 +21,8 @@ public class HomeController {
     
     /*For thymeleaf example*/
     @RequestMapping(value = "/thymeleaf/home", method = GET)
-    public String thymeleafHome() {
-        logger.debug("thymeleafHome()");
+    public String thHome() {
+        logger.debug("thHome()");
         return "thymeleaf/home";// View name is home. This String will be interpreted by Spring MVC as the name of the view that will be rendered. DispatcherServlet will ask the view resolver to resolve this logical view name into an actual view.
     }
 }

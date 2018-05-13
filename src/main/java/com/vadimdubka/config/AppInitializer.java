@@ -20,15 +20,17 @@ In Spring web application there’s often 2 APPLICATION CONTEXT:
     2) second is created by ContextLoaderListener.
 
 CONFIGURATION CLASSes of application (using Java configuration):
-    1) DispatcherServlet in the first APPLICATION CONTEXT loads BEANS declared in the CONFIGURATION CLASS (WebConfig), that contain web components such as:
+    1) DispatcherServlet in the first APPLICATION CONTEXT loads BEANS declared in the CONFIGURATION CLASS (WebConfig),
+    that contain web components such as:
         - controllers,
         - view resolvers,
         - handler mappings.
-    2) ContextLoaderListener in the second APPLICATION CONTEXT loads the other BEANS declared in other CONFIGURATION CLASSes (RootConfig, DataConfig, DBConfig) of your application. These beans are typically the middle-tier and data-tier components that drive the back end of the application.
+    2) ContextLoaderListener in the second APPLICATION CONTEXT loads the other BEANS declared
+    in other CONFIGURATION CLASSes (RootConfig, DataConfig, DBConfig) of your application.
+    These beans are typically the middle-tier and data-tier components that drive the back end of the application.
 */
 
 /*  DispatcherServlet = servlet container = web container. DispatcherServlet is the centerpiece of Spring MVC. It’s where the request first hits the framework, and it’s responsible for routing the request through all the other components.*/
-
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     
@@ -49,7 +51,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     /*The @Configuration classes returned from getRootConfigClasses() will define beans for ContextLoaderListener's  application context.*/
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{SpringDBConfig.class, RootConfig.class, DataConfig.class};
+        return new Class<?>[]{SpringDBConfig.class, RootConfig.class, DataConfig.class, SecurityConfig.class, SecurityWebInitializer.class};
     }
     
     /* ******Additional methods********** */

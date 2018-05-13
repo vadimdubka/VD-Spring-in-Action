@@ -18,6 +18,11 @@
         <put-attribute name="body" value="/WEB-INF/views/spittles/registerForm.jsp"/>
     </definition>
 
+
+    <definition name="thymeleaf/login" extends="base">
+        <put-attribute name="body" value="/WEB-INF/views/thymeleaf/login.html"/>
+    </definition>
+
     <definition name="spittles/profile" extends="base">
         <put-attribute name="body" value="/WEB-INF/views/spittles/profile.jsp"/>
     </definition>

@@ -21,21 +21,23 @@
             <s:param name="count" value="5"/>
         </s:url>
         <a href="${spittlesUrl}">Spittles with params</a> |
-
-        <%--Old variant--%><%--<a href="<c:url value="/spitter/register" />">Register</a>--%>
-        <%--Using spring tag you can have <s:url> construct the URL and assign it to a variable to be used later in the template --%>
-        <s:url value="/spitter/register" var="registerUrl"/>
-        <a href="${registerUrl}">Register</a> |
-
         <%--URL with replaceable path parameter--%>
         <s:url value="/spitter/{username}" var="spitterUrl">
             <s:param name="username" value="jbauer"/>
         </s:url>
         <a href="${spitterUrl}">User jbauer</a> <br>
 
+        <a href="<c:url value="/spitter/login"/>">Login</a> |
+        <%--Old variant--%><%--<a href="<c:url value="/spitter/register" />">Register</a>--%>
+        <%--Using spring tag you can have <s:url> construct the URL and assign it to a variable to be used later in the template --%>
+        <s:url value="/spitter/register" var="registerUrl"/>
+        <a href="${registerUrl}">Register</a> |
+        <a href="<c:url value="/signout"/>">Logout</a> <br>
+
+
         <h2>Thymeleaf examples (only demonstration, don't go through links):</h2>
         <a href="<c:url value="/thymeleaf/home" />">Home page</a> |
-        <a href="<c:url value="/spitter/thymeleaf/register" />">Register</a> <br>
+        <a href="<c:url value="/spitter/thymeleaf/register" />">Register</a>
 
         <h2>Multiple files upload</h2>
         <form action="spitter/multipleFileUpload" method="post" enctype="multipart/form-data">

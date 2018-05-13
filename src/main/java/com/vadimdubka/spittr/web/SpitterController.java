@@ -40,6 +40,28 @@ public class SpitterController {
         this.spitterRepository = spitterRepository;
     }
     
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String thLogin() {
+        logger.debug("thLogin() GET");
+        return "thymeleaf/login";
+    }
+    
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String loginUser(@RequestParam(value = "username", defaultValue = "") String username,
+                            @RequestParam(value = "password", defaultValue = "") String password) {
+        logger.debug("thLogin() POST " + username + " " + password);
+        
+        String returnPage = "home";
+        
+        Spitter spitter = spitterRepository.findByUsername(username);
+        if (spitter != null && spitter.getPassword().equals(password)) {
+            returnPage = "redirect:/spitter/{username}";
+        } else {
+            logger.debug("User is not defined or password doen't match." + spitter.toString() + " ");
+        }
+        return returnPage;
+    }
+    
     /*5.4	Processing forms*/
     @RequestMapping(value = "/register", method = GET)
     public String showRegistrationForm(Model model) {
