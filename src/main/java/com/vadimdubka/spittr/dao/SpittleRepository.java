@@ -16,5 +16,15 @@ public interface SpittleRepository {
     
     Spittle findOne(long i);
     
-    void save(Spittle spittle);
+    Spittle save(Spittle spittle);
+    
+    long count();
+    
+    List<Spittle> findRecent();
+    
+    List<Spittle> findRecent(int count);
+    
+    List<Spittle> findBySpitterId(long spitterId);
+    
+    void delete(long id);
 }

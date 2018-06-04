@@ -51,7 +51,12 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     /*The @Configuration classes returned from getRootConfigClasses() will define beans for ContextLoaderListener's  application context.*/
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{SpringDBConfig.class, RootConfig.class, DataConfig.class, SecurityConfig.class, SecurityWebInitializer.class};
+        return new Class<?>[]{
+            SpringDBConfig.class,
+            RootConfig.class,
+            DataConfig.class,
+            SecurityConfig.class,
+            SecurityWebInitializer.class};
     }
     
     /* ******Additional methods********** */

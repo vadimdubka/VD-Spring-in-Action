@@ -12,26 +12,31 @@ public class Spitter {
     private Long id;
     
     @NotNull
-    @Size(min=5, max=16, message="{username.size}")
+    @Size(min = 5, max = 16, message = "{username.size}")
     private String username;
     
     @NotNull
-    @Size(min=5, max=25, message="{password.size}")
+    @Size(min = 5, max = 25, message = "{password.size}")
     private String password;
     
     @NotNull
-    @Size(min=2, max=30, message="{firstName.size}")
+    @Size(min = 2, max = 30, message = "{firstName.size}")
     private String firstName;
     
     @NotNull
-    @Size(min=2, max=30, message="{lastName.size}")
+    @Size(min = 2, max = 30, message = "{lastName.size}")
     private String lastName;
+    
+    private String fullName;
     
     @NotNull
     @Email
     private String email;
     
-    public Spitter() {}
+    private boolean updateByEmail;
+    
+    public Spitter() {
+    }
     
     public Spitter(String username, String password, String firstName, String lastName, String email) {
         this(null, username, password, firstName, lastName, email);
@@ -44,6 +49,26 @@ public class Spitter {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+    
+    public Spitter(long id, String username, String password, String firstName, String lastName, String fullName, String email, boolean updateByEmail) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fullName = fullName;
+        this.email = email;
+        this.updateByEmail = updateByEmail;
+    }
+    
+    public Spitter(long id, String username, String password, String fullName, String email, boolean updateByEmail) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.updateByEmail = updateByEmail;
     }
     
     public String getUsername() {
@@ -92,6 +117,22 @@ public class Spitter {
     
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    public boolean isUpdateByEmail() {
+        return updateByEmail;
+    }
+    
+    public void setUpdateByEmail(boolean updateByEmail) {
+        this.updateByEmail = updateByEmail;
     }
     
     @Override

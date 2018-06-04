@@ -6,11 +6,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Date;
 
 public class Spittle {
-    private final Long   id;
-    private final String message;
-    private final Date   time;
-    private       Double latitude;
-    private       Double longitude;
+    private final Long    id;
+    private final String  message;
+    private       Date    time; // TODO сделать Final
+    private       Double  latitude;
+    private       Double  longitude;
+    private       Spitter spitter; // TODO сделать Final
+    private       Date    postedTime; // TODO сделать Final
     
     public Spittle(String message, Date time) {
         this(null, message, time, null, null);
@@ -22,6 +24,13 @@ public class Spittle {
         this.time = time;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+    
+    public Spittle(Long id, Spitter spitter, String message, Date postedTime) {
+        this.id = id;
+        this.spitter = spitter;
+        this.message = message;
+        this.postedTime = postedTime;
     }
     
     public long getId() {
@@ -42,6 +51,22 @@ public class Spittle {
     
     public Double getLatitude() {
         return latitude;
+    }
+    
+    public Spitter getSpitter() {
+        return spitter;
+    }
+    
+    public void setSpitter(Spitter spitter) {
+        this.spitter = spitter;
+    }
+    
+    public Date getPostedTime() {
+        return postedTime;
+    }
+    
+    public void setPostedTime(Date postedTime) {
+        this.postedTime = postedTime;
     }
     
     @Override

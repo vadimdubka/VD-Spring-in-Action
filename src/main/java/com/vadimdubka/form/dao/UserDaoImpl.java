@@ -1,7 +1,6 @@
 package com.vadimdubka.form.dao;
 
 import com.vadimdubka.form.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,7 +25,7 @@ public class UserDaoImpl implements UserDao {
     
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
-    @Autowired
+   //  @Autowired //TODO uncomment to autowire
     public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate)
         throws DataAccessException {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
