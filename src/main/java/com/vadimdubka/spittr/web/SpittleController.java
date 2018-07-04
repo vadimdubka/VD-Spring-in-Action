@@ -37,13 +37,14 @@ public class SpittleController {
     @RequestMapping(method = RequestMethod.GET)
     public String spittles(Model model) {
         /* Add spittles to model.
-        Spittles() method is given a Model as a parameter. This is so that spittles() can populate the model with the Spittle list
-         it retrieves from the repository. The Model is essentially a map (that is, a collection of key-value pairs)
-         that will be handed off to the view so that the data can be rendered to the client.
-         When add- Attribute() is called without specifying a key, the key is inferred from the type of object being set as the value.
-         In this case, because it’s a List<Spittle>, the key will be inferred as spittleList.
-         The equivalent:
-         model.addAttribute("spittleList", spittleRepository.findSpittles(Long.MAX_VALUE, 20));*/
+        Spittles() method is given a Model as a parameter.
+        This is so that spittles() can populate the model with the Spittle list it retrieves from the repository.
+        The Model is essentially a map (that is, a collection of key-value pairs)
+        that will be handed off to the view so that the data can be rendered to the client.
+        When add- Attribute() is called without specifying a key,
+        the key is inferred from the type of object being set as the value.
+        In this case, because it’s a List<Spittle>, the key will be inferred as spittleList.
+        The equivalent: model.addAttribute("spittleList", spittleRepository.findSpittles(Long.MAX_VALUE, 20));*/
         model.addAttribute(spittleRepository.findSpittles(Long.MAX_VALUE, 20));
         return "spittles/spittles";  // Return view name
     }
@@ -65,7 +66,7 @@ public class SpittleController {
     /**
      * 5.3.2	Taking input via path parameters
      * request example: /spittles/show_one?spittle_id=12345.
-     * It's not good approach from from a resource-orientation perspective
+     * It's not good approach from a resource-orientation perspective
      */
     @RequestMapping(value = "/show_one", method = RequestMethod.GET)
     public String showSpittle(@RequestParam("spittle_id") long spittleId, Model model) {
@@ -114,9 +115,13 @@ public class SpittleController {
     }
     
     /**
-     * The @ExceptionHandler annotation has been applied to the handleDuplicateSpittle() method, designating it as the go-to method when a DuplicateSpittleException is thrown. It returns a String, which, just as with the request-handling method, specifies the logical name of the view to render, telling the user that they attempted to create a duplicate entry.
-     * What’s especially interesting about @ExceptionHandler methods is that they han-dle their exceptions from any handler method in the same controller. So although you created the handleDuplicateSpittle() method from the code extracted from saveSpittle(), it will handle a DuplicateSpittleException thrown from any method in SpittleController.
-     * If @ExceptionHandler methods can handle exceptions thrown from any handler method in the same controller class, you might be wondering if there’s a way they can handle exceptions thrown from handler methods in any controller. As of Spring 3.2 they certainly can, but only if they’re defined in a controller advice class {@link AppWideExceptionHandler#handleNotFound()} .
+     * The @ExceptionHandler annotation has been applied to the handleDuplicateSpittle() method,
+     * designating it as the go-to method when a DuplicateSpittleException is thrown.
+     * It returns a String, which, just as with the request-handling method,
+     * specifies the logical name of the view to render, telling the user that they attempted to create a duplicate entry.
+     * What’s especially interesting about @ExceptionHandler methods is that they handle their exceptions from any handler method in the same controller. So although you created the handleDuplicateSpittle() method from the code extracted from saveSpittle(), it will handle a DuplicateSpittleException thrown from any method in SpittleController.
+     * If @ExceptionHandler methods can handle exceptions thrown from any handler method in the same controller class, you might be wondering if there’s a way they can handle exceptions thrown from handler methods in any controller.
+     * As of Spring 3.2 they certainly can, but only if they’re defined in a controller advice class {@link AppWideExceptionHandler#handleNotFound()} .
      */
     @ExceptionHandler(DuplicateSpittleException.class)
     public String handleNotFound() {
