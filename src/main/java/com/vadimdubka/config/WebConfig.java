@@ -49,7 +49,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         // this will ensure that JSTL’s formatting and message tags will get the Locale and message sources configured in Spring
-        viewResolver.setViewClass(JstlView.class); // added by myself
         viewResolver.setExposeContextBeansAsAttributes(true); // added by myself
         return viewResolver;
     }

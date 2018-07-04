@@ -114,11 +114,9 @@ public class SpittleController {
     }
     
     /**
-     * The @ExceptionHandler annotation has been applied to the handleDuplicate- Spittle() method, designating it as the go-to method when a DuplicateSpittle- Exception is thrown. It returns a String, which, just as with the request-handling method, specifies the logical name of the view to render, telling the user that they attempted to create a duplicate entry.
-     * What’s especially interesting about @ExceptionHandler methods is that they han- dle their exceptions from any handler method in the same controller. So although you created the handleDuplicateSpittle() method from the code extracted from saveSpittle(), it will handle a DuplicateSpittleException thrown from any method in SpittleController.
-     * If @ExceptionHandler methods can handle exceptions thrown from any handler method in the same controller class,
-     * you might be wondering if there’s a way they can handle exceptions thrown from handler methods in any controller.
-     * As of Spring 3.2 they certainly can, but only if they’re defined in a controller advice class {@link AppWideExceptionHandler#handleNotFound()} .
+     * The @ExceptionHandler annotation has been applied to the handleDuplicateSpittle() method, designating it as the go-to method when a DuplicateSpittleException is thrown. It returns a String, which, just as with the request-handling method, specifies the logical name of the view to render, telling the user that they attempted to create a duplicate entry.
+     * What’s especially interesting about @ExceptionHandler methods is that they han-dle their exceptions from any handler method in the same controller. So although you created the handleDuplicateSpittle() method from the code extracted from saveSpittle(), it will handle a DuplicateSpittleException thrown from any method in SpittleController.
+     * If @ExceptionHandler methods can handle exceptions thrown from any handler method in the same controller class, you might be wondering if there’s a way they can handle exceptions thrown from handler methods in any controller. As of Spring 3.2 they certainly can, but only if they’re defined in a controller advice class {@link AppWideExceptionHandler#handleNotFound()} .
      */
     @ExceptionHandler(DuplicateSpittleException.class)
     public String handleNotFound() {
