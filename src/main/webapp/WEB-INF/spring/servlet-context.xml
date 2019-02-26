@@ -7,7 +7,6 @@
 
     <!--Commented because we configured everything with annotations-->
 
-
     <!-- <annotation-driven/>-->
 
     <!-- Scan the JavaConfig -->

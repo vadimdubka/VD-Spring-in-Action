@@ -8,9 +8,9 @@ import javax.servlet.ServletRegistration;
 
 /*  To configure Spring MVC we can use:
 - web.xml file or
-- AbstractAnnotationConfigDispatcherServletInitializer Java class.
+- WebApplicationInitializer (AbstractAnnotationConfigDispatcherServletInitializer) Java class.
 
-AbstractAnnotationConfigDispatcherServletInitializer:
+WebApplicationInitializer:
     0) defines that Spring MVC configuration will be in Java instead of XML;
     1) setup/creates DispatcherServlet;
     2) setup/creates ContextLoaderListener.

@@ -6,72 +6,129 @@
 
     <display-name>Spring4 MVC Application</display-name>
 
-    <!--********************************************************************************************-->
-    <!--
-
-        &lt;!&ndash; In a typical Spring MVC application, you need
+    <!-- In a typical Spring MVC application, you need
         - DispatcherServlet and
         - ContextLoaderListener.
-        AbstractAnnotationConfigDispatcherServletInitializer will register these automatically for you, but if you’re registering them in web.xml, you’ll need to do all the work. &ndash;&gt;
+        We can configure them using:
+        - web.xml file
+        - or WebApplicationInitializer (AbstractAnnotationConfigDispatcherServletInitializer) class.
 
-        &lt;!&ndash;Traditionally DispatcherServlet and ContextLoaderListener load their respective application contexts from XML. But we’ll favor Java configuration over XML configuration. Therefore you’ll want to set up Spring MVC to load the configuration from @Configuration-annotated classes.&ndash;&gt;
-        &lt;!&ndash;If you want use Java configuration&ndash;&gt;
-        &lt;!&ndash;<context-param>
-            <param-name>contextClass</param-name>
-            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-            </param-value>
-        </context-param>&ndash;&gt;
+        WebApplicationInitializer (AbstractAnnotationConfigDispatcherServletInitializer) will register these automatically for you,
+        but if you’re registering them in web.xml, you’ll need to do all the work by yourself. -->
 
-        &lt;!&ndash;Set location of root APP CONTEXT with beans definitions loaded by ContextLoaderListener. &ndash;&gt;
-        <context-param>
-            <param-name>contextConfigLocation</param-name>
-            &lt;!&ndash;If you want use XML configuration&ndash;&gt;
-            <param-value>/WEB-INF/spring/root-context.xml</param-value>
-            &lt;!&ndash;If you want use Java configuration&ndash;&gt;
-            &lt;!&ndash;<param-value>com.vadimdubka.config.RootConfig</param-value>&ndash;&gt;
-        </context-param>
+    <!-- Application Bootstrap
+    The basic difference in bootstrapping of an application in Spring and Spring Boot lies with the servlet.
+    Spring      - uses either the web.xml or SpringServletContainerInitializer as its bootstrap entry point.
+    Spring Boot - uses only Servlet 3 features to bootstrap an application.
 
-        &lt;!&ndash; Register ContextLoaderListener&ndash;&gt;
-        <listener>
-            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-        </listener>
+    How Spring Bootstraps?
+    Spring supports both the legacy web.xml way of bootstrapping as well as the latest Servlet 3+ method.
 
-        &lt;!&ndash;Register DispatcherServlet&ndash;&gt;
-        &lt;!&ndash;DispatcherServlet loads its application context with beans defined in a file whose name is based on the servlet name. In listing 7.3, the servlet is named appServlet. Therefore, DispatcherServlet loads its application context from an XML file at / WEB-INF/appServlet-context.xml.&ndash;&gt;
-        <servlet>
-            <servlet-name>appServlet</servlet-name>
-            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-            &lt;!&ndash;If you want use Java configuration&ndash;&gt;
-            &lt;!&ndash;<init-param>
-                <param-name>contextClass</param-name>
-                <param-value>
-                    org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-                </param-value>
-            </init-param>&ndash;&gt;
-            &lt;!&ndash;If you’d rather specify the location of the DispatcherServlet configuration file, you can set a contextConfigLocation initialization parameter on the servlet. For example, the following DispatcherServlet configuration has DispatcherServlet loading  its  beans  from  /WEB-INF/spring/servlet-context.xml:&ndash;&gt;
-            &lt;!&ndash;Specify DispatcherServlet configuration class&ndash;&gt;
-            <init-param>
-                <param-name>contextConfigLocation</param-name>
-                &lt;!&ndash;If you want use XML configuration&ndash;&gt;
-                <param-value>/WEB-INF/spring/servlet-context.xml</param-value>
-                &lt;!&ndash;If you want use Java configuration&ndash;&gt;
-                &lt;!&ndash;<param-value>com.vadimdubka.config.WebConfigConfig</param-value>&ndash;&gt;
-            </init-param>
-            &lt;!&ndash;Specify multipart configuration &ndash;&gt;
-            <multipart-config>
-                <location>/tmp/spittr/uploads</location>
-                <max-file-size>2097152</max-file-size>
-                <max-request-size>4194304</max-request-size>
-            </multipart-config>
-            <load-on-startup>1</load-on-startup>
-        </servlet>
+    Let’s see the web.xml approach in steps:
+    - Servlet container (the server) reads web.xml
+    - The DispatcherServlet defined in the web.xml is instantiated by the container
+    - DispatcherServlet creates WebApplicationContext by reading WEB-INF/{servletName}-servlet.xml
+    - Finally, the DispatcherServlet registers the beans defined in the application context
 
-        &lt;!&ndash;Map DispatcherServlet to /&ndash;&gt;
-        <servlet-mapping>
-            <servlet-name>appServlet</servlet-name>
-            <url-pattern>/</url-pattern>
-        </servlet-mapping>
+    Here’s how Spring bootstraps using Servlet 3+ approach:
+    - The container searches for classes implementing ServletContainerInitializer  and executes
+    - The SpringServletContainerInitializer finds all classes implementing WebApplicationInitializer
+    - The WebApplicationInitializer creates the context with XML or @Configuration classes
+    - The WebApplicationInitializer creates the DispatcherServlet with the previously created context.
+
+
+    How Spring Boot Bootstraps?
+    The entry point of a Spring Boot application is the class which is annotated with @SpringBootApplication:
+
+    @SpringBootApplication
+    public class Application {
+        public static void main(String[] args) {
+            SpringApplication.run(Application.class, args);
+        }
+    }
+
+    By default, Spring Boot uses an embedded container to run the application.
+    In this case, Spring Boot uses the public static void main entry-point to launch an embedded web server.
+    Also, it takes care of the binding of the Servlet, Filter,
+    and ServletContextInitializer beans from the application context to the embedded servlet container.
+
+    Spring Boot provides the option of deploying it as a web archive in an external container as well. In this case, we have to extend the SpringBootServletInitializer:
+    @SpringBootApplication
+    public class Application extends SpringBootServletInitializer {
+        // ...
+    }
+    Here the external servlet container looks for the Main-class defined in the META-INF file of the web archive
+    and the SpringBootServletInitializer will take care of binding the Servlet, Filter, and ServletContextInitializer.
     -->
+
+
+    <!--********************************************************************************************-->
+    <!--Traditionally DispatcherServlet and ContextLoaderListener load their respective application contexts from XML.
+    But we’ll favor Java configuration over XML configuration.
+    Therefore you’ll want to set up Spring MVC to load the configuration from @Configuration-annotated classes.-->
+
+    <!--If you want use Java configuration-->
+    <!--<context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+        </param-value>
+    </context-param>-->
+
+    <!--Set location of root APP CONTEXT with beans definitions loaded by ContextLoaderListener. -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <!--If you want use XML configuration-->
+        <param-value>/WEB-INF/spring/root-context.xml</param-value>
+        <!--If you want use Java configuration-->
+        <!--<param-value>com.vadimdubka.config.RootConfig</param-value>-->
+    </context-param>
+
+    <!-- Register ContextLoaderListener-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!--Register DispatcherServlet-->
+    <!--DispatcherServlet loads its application context with beans defined in a file whose name is based on the servlet name.
+    In listing 7.3, the servlet is named appServlet.
+    Therefore, DispatcherServlet loads its application context from an XML file at / WEB-INF/appServlet-context.xml.-->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--If you want use Java configuration-->
+        <!--<init-param>
+            <param-name>contextClass</param-name>
+            <param-value>
+                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            </param-value>
+        </init-param>-->
+
+        <!--If you’d rather specify the location of the DispatcherServlet configuration file,
+        you can set a contextConfigLocation initialization parameter on the servlet.
+        For example, the following DispatcherServlet configuration has DispatcherServlet loading  its  beans  from
+        /WEB-INF/spring/servlet-context.xml:-->
+        <!--Specify DispatcherServlet configuration class-->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!--If you want use XML configuration-->
+            <param-value>/WEB-INF/spring/servlet-context.xml</param-value>
+            <!--If you want use Java configuration-->
+            <!--<param-value>com.vadimdubka.config.WebConfigConfig</param-value>-->
+        </init-param>
+        <!--Specify multipart configuration -->
+        <multipart-config>
+            <location>/tmp/spittr/uploads</location>
+            <max-file-size>2097152</max-file-size>
+            <max-request-size>4194304</max-request-size>
+        </multipart-config>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!--Map DispatcherServlet to /-->
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 
     <!--********************************************************************************************-->
 
